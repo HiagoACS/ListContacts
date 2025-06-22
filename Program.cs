@@ -1,0 +1,35 @@
+﻿using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        ContactManager contactManager = new ContactManager();
+        while (true)
+        {
+            Console.WriteLine("1. Create Contact");
+            Console.WriteLine("2. View Contacts");
+            Console.WriteLine("3. Empty Contacts");
+            Console.WriteLine("4. Exit");
+            Console.Write("Choose an option: ");
+            string? choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    contactManager.CreateContact();
+                    break;
+                case "2":
+                    contactManager.ListContacts();
+                    break;
+                case "3":
+                    contactManager.ClearContacts();
+                    break;
+                case "4":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option, please try again.");
+                    break;
+            }
+        }
+    }
+}
