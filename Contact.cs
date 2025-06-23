@@ -3,8 +3,8 @@
 public class Contact
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
-    public string? Nome { get; set; }
-	public string? Telefone { get; set; }
+    public string? Name { get; set; }
+	public string? Phone { get; set; }
 	public string? Email { get; set; }
 
 	// Constructors
@@ -13,10 +13,10 @@ public class Contact
 	public Contact() { }
 
     // Constructor with parameters
-    public Contact(string nome, string telefone, string email)
+    public Contact(string name, string phone, string email)
 	{
-		Nome = nome;
-		Telefone = telefone;
+		Name = name;
+		Phone = phone;
 		Email = email;
 	}
 }
