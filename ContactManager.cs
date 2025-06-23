@@ -67,6 +67,35 @@ public class ContactManager
         SaveContacts();
     }
 
+    public void CreateContact(string name, string phone, string email)
+    {
+        Contact newContact = new Contact();
+
+        newContact.Name = name;
+        newContact.Phone = phone;
+        newContact.Email = email;
+
+        //Validate the contact details
+        if (string.IsNullOrEmpty(newContact.Name) || string.IsNullOrEmpty(newContact.Phone) || string.IsNullOrEmpty(newContact.Email))
+        {
+            Console.WriteLine("Contact don't have all fields. Contact creation failed.");
+            return;
+        }
+        // Check if a contact with the same phone already exists
+        if (Contacts.Exists(c => c.Phone == newContact.Phone))
+        {
+            Console.WriteLine("A contact with this phone number already exists. Contact creation failed.");
+            return;
+        }
+
+
+        // Add the new contact to the list and save it
+        AddContact(newContact);
+        Console.WriteLine($"Contact {newContact.Name} added!");
+
+        // Save the updated contacts list to the file
+        SaveContacts();
+    }
     // Save contacts to a JSON file
     private void SaveContacts()
     {
@@ -264,6 +293,52 @@ public class ContactManager
         {
             Console.Clear();
             Console.WriteLine($"An error occurred while exporting contacts: {ex.Message}");
+        }
+    }
+
+    // Import contacts from a csv file
+    public void ImportContactsFromCsv()
+    {
+        Console.WriteLine("Enter the name of the CSV file to import (default is contacts.csv): ");
+
+        string nameArchiveCsv = Console.ReadLine();
+        if (string.IsNullOrEmpty(nameArchiveCsv))
+        {
+            nameArchiveCsv = "contacts.csv"; // Default file name
+        }
+        // Define the path to the CSV file
+        string projectRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..");
+        string filePath = Path.Combine(projectRoot, nameArchiveCsv);
+        // Try/Catch to load archive
+        Console.Clear();
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("Id,Name,Phone,Email")) continue; // Skip header line
+                        var parts = line.Split(',');
+                        if (parts.Length == 4)
+                        {
+                            // Create a new contact with the data from the CSV file, parts[0] is Id, parts[1] is Name, parts[2] is Phone, parts[3] is Email
+                            CreateContact(parts[1], parts[2], parts[3]); // CreateContact method expects Name, Phone, Email
+                        }
+                    }
+                }
+                Console.WriteLine($"Contacts imported from {nameArchiveCsv} successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"The file {nameArchiveCsv} does not exist.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while importing contacts: {ex.Message}");
         }
     }
 }

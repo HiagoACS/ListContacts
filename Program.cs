@@ -13,7 +13,8 @@ public class Program
             Console.WriteLine("4. Edit Contacts");
             Console.WriteLine("5. Delete Contact");
             Console.WriteLine("6. Export Contacts");
-            Console.WriteLine("7. Exit");
+            Console.WriteLine("7. Import Contacts");
+            Console.WriteLine("8. Exit");
             Console.Write("Choose an option: ");
             string? choice = Console.ReadLine();
             switch (choice)
@@ -38,8 +39,12 @@ public class Program
                     contactManager.ExportContactsToCsv();
                     break;
                 case "7":
+                    contactManager.ImportContactsFromCsv();
+                    break;
+                case "8":
                     return;
                 default:
+                    Console.Clear();
                     Console.WriteLine("Invalid option, please try again.");
                     break;
             }
