@@ -5,12 +5,13 @@ using System.Text.Json;
 
 public class ContactManager
 {
-    private List<Contact> Contacts { get; set; } = new List<Contact>();
+    private List<Contact> Contacts { get; set; }
     private string filePath = "contacts.json";
-
+    private readonly Logger logger;
     //Constructor
-    public ContactManager()
+    public ContactManager(Logger logger)
     {
+        this.logger = logger;
         // Initialize the contacts list and load existing contacts from a file
         Contacts = new List<Contact>();
         getContactArchive();
@@ -61,6 +62,7 @@ public class ContactManager
 
         // Add the new contact to the list and save it
         AddContact(newContact);
+        logger.WriteLog($"Contact created: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
         Console.WriteLine("Contact created successfully!");
 
         // Save the updated contacts list to the file
@@ -95,6 +97,7 @@ public class ContactManager
 
         // Save the updated contacts list to the file
         SaveContacts();
+        logger.WriteLog($"Contact imported: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
     }
     // Save contacts to a JSON file
     private void SaveContacts()
@@ -148,6 +151,7 @@ public class ContactManager
         SaveContacts();
 
         Console.WriteLine("All contacts have been cleared.");
+        logger.WriteLog("All contacts cleared.");
     }
 
     // Edit a contact
@@ -174,6 +178,8 @@ public class ContactManager
         // Display the current details of the contact and prompt for new values
         Console.WriteLine($"Editing contact: {contact.Name}");
 
+        logger.WriteLog($"Editing contact: {contact.Name}");
+
         Console.Write("Enter new name (leave empty to keep current): ");
         string? newName = Console.ReadLine();
         if (!string.IsNullOrEmpty(newName))
@@ -195,6 +201,9 @@ public class ContactManager
         // Save the updated contacts list to the file
         Console.Clear();
         SaveContacts();
+
+        logger.WriteLog($"Contact edited: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
+
     }
 
     // Find a contact by name
@@ -217,18 +226,21 @@ public class ContactManager
                 Console.Write("Enter the name of the contact: ");
                 string name = Console.ReadLine();
                 contact = Contacts.Find(c => c.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+                logger.WriteLog($"Searching contact by Name: {name}");
             }
             else if (option == "2") 
             {
                 Console.Write("Enter the ID of the contact: ");
                 string id = Console.ReadLine();
                 contact = Contacts.Find(c => c.Id.ToString().Equals(id, StringComparison.OrdinalIgnoreCase) == true);
+                logger.WriteLog($"Searching contact by Id: {id}");
             }
 
 
             // If a contact is found, return it
             if (contact != null)
             {
+                logger.WriteLog($"Contact: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
                 return contact;
             }
 
@@ -237,6 +249,9 @@ public class ContactManager
             {
                 Console.Clear();
                 Console.WriteLine("Contact not found. Please try again.");
+
+                logger.WriteLog("Contact not found during search.");
+
                 ListContacts();
                 Console.WriteLine("1. Search by Name");
                 Console.WriteLine("2. Search by Id");
@@ -258,6 +273,7 @@ public class ContactManager
         {
             Contacts.Remove(contact);
             SaveContacts();
+            logger.WriteLog($"Contact deleted: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
             Console.WriteLine($"Contact deleted successfully.");
         }
         else
@@ -288,11 +304,13 @@ public class ContactManager
             }
             Console.Clear();
             Console.WriteLine($"Contacts exported to {nameArchiveCsv} successfully.");
+            logger.WriteLog($"Contacts exported to {nameArchiveCsv} successfully.");
         }
         catch (Exception ex)
         {
             Console.Clear();
             Console.WriteLine($"An error occurred while exporting contacts: {ex.Message}");
+            logger.WriteLog($"An error occurred while exporting contacts to {nameArchiveCsv}: {ex.Message}");
         }
     }
 
@@ -313,6 +331,7 @@ public class ContactManager
         Console.Clear();
         try
         {
+            logger.WriteLog($"Importing contacts from {nameArchiveCsv}");
             if (File.Exists(filePath))
             {
                 using (StreamReader reader = new StreamReader(filePath))
@@ -334,11 +353,13 @@ public class ContactManager
             else
             {
                 Console.WriteLine($"The file {nameArchiveCsv} does not exist.");
+                logger.WriteLog($"The file {nameArchiveCsv} does not exist.");
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred while importing contacts: {ex.Message}");
+            logger.WriteLog($"An error occurred while importing contacts from {nameArchiveCsv}: {ex.Message}");
         }
     }
 }

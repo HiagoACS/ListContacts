@@ -4,7 +4,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        ContactManager contactManager = new ContactManager();
+        Logger logger = new Logger();
+        ContactManager contactManager = new ContactManager(logger); // Pass the logger instance to the ContactManager
         while (true)
         {
             Console.WriteLine("1. Create Contact");
