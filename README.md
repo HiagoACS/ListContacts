@@ -11,6 +11,7 @@ This project implements a complete basic **CRUD** (Create, Read, Update, Delete)
 - **Update**: Edit existing contacts by name
 - **Delete**: Remove specific contacts by name or clear the entire contact list
 - Persist contact data in a local JSON file (`contacts.json`)
+- Register Logger to track application events
 
 ## Getting Started 🚀
 
