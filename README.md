@@ -1,25 +1,55 @@
+﻿
 # Console Contact Manager
 
 A simple console application written in C# to manage contacts.  
-This project allows you to add, list, edit, and delete contacts, saving the data in a JSON file.
+This project now implements a complete basic **CRUD** (Create, Read, Update, Delete) system for contact management, with data saved in a JSON file.
 
-## Features
+## Features ✅
 
-- Add new contacts with unique IDs  
-- List all contacts  
-- Edit and delete contacts (if implemented)  
-- Save contacts data to a JSON file (`contacts.json`)  
-- Load contacts data from the JSON file on startup
+- **Create**: Add new contacts
+- **Read**: List all saved contacts
+- **Update**: Edit existing contacts by name
+- **Delete**: Remove specific contacts by name or clear the entire contact list
+- Persist contact data in a local JSON file (`contacts.json`)
 
-## Getting Started
+## Getting Started 🚀
 
 ### Prerequisites
 
-- [.NET SDK](https://dotnet.microsoft.com/download) installed  
-- Visual Studio (recommended) or any C# IDE
+- [.NET SDK](https://dotnet.microsoft.com/download) installed
+- Visual Studio (recommended) or any other C# IDE
 
-### How to Run
+### Running the Application
 
-1. Clone the repository:  
+1. Clone the repository:
+
    ```bash
    git clone https://github.com/HiagoACS/ListContacts.git
+   ```
+
+2. Open the solution in Visual Studio.
+
+3. Build and run the project.
+
+### Notes
+
+- All contacts are saved locally in a JSON file (`contacts.json`).
+- The `contacts.json` file is ignored in version control (`.gitignore`) to prevent personal data from being pushed to the repository.
+
+## Possible Next Steps 🚧
+
+- Improve user input validation
+- Add contact search functionality
+- Implement unique contact IDs
+- Create unit tests
+- Migrate to a graphical interface (WinForms/WPF)
+- Persist data in a database (e.g., SQLite)
+
+## Contributing 🤝
+
+Feel free to submit issues or pull requests to help improve this project.
+
+## License 📄
+
+This project is licensed under the MIT License.
+
