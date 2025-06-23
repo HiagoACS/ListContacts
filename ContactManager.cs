@@ -44,7 +44,7 @@ public class ContactManager
         Console.Write("Enter email: ");
         newContact.Email = Console.ReadLine();
 
-
+        Console.Clear();
         //Validate the contact details
         if (string.IsNullOrEmpty(newContact.Name) || string.IsNullOrEmpty(newContact.Phone) || string.IsNullOrEmpty(newContact.Email))
         {
@@ -92,6 +92,7 @@ public class ContactManager
     {
         if (Contacts.Count == 0)
         {
+            Console.Clear();
             Console.WriteLine("No contacts found.");
             return;
         }
@@ -108,6 +109,7 @@ public class ContactManager
         // Confirm with the user before clearing
         Console.Write("Are you sure you want to clear all contacts? (y/n): ");
         string? confirmation = Console.ReadLine();
+        Console.Clear();
         if (confirmation?.ToLower() != "y")
         {
             Console.WriteLine("Operation cancelled.");
@@ -115,13 +117,15 @@ public class ContactManager
         }
         Contacts.Clear();
         SaveContacts();
+
         Console.WriteLine("All contacts have been cleared.");
     }
 
     // Edit a contact
     public void EditContact()
     {
-
+        Console.Clear();
+        ListContacts();
         // Check if there are any contacts to edit
         if (Contacts.Count == 0)
         {
@@ -160,12 +164,14 @@ public class ContactManager
             contact.Email = newEmail;
         }
         // Save the updated contacts list to the file
+        Console.Clear();
         SaveContacts();
     }
 
     // Find a contact by name
     private Contact? FindContact(List<Contact> Contacts)
     {
+        Console.Clear();
         Console.WriteLine("Search contact with Id or Name:");
         Console.WriteLine("1. Search by Name");
         Console.WriteLine("2. Search by Id");
@@ -200,8 +206,12 @@ public class ContactManager
             // If no contact is found, prompt the user to try again
             else
             {
+                Console.Clear();
                 Console.WriteLine("Contact not found. Please try again.");
                 ListContacts();
+                Console.WriteLine("1. Search by Name");
+                Console.WriteLine("2. Search by Id");
+                option = Console.ReadLine();
             }
         }
     }
@@ -212,6 +222,7 @@ public class ContactManager
     //Delete a contact by name
     public void DeleteContact()
     {
+        Console.Clear();
         Console.Write("Enter the name of the contact to delete: ");
         Contact? contact = FindContact(Contacts);
         if (contact != null)

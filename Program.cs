@@ -21,6 +21,7 @@ public class Program
                     contactManager.CreateContact();
                     break;
                 case "2":
+                    Console.Clear();
                     contactManager.ListContacts();
                     break;
                 case "3":
