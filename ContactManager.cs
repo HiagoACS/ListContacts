@@ -44,6 +44,13 @@ public class ContactManager
         Console.Write("Enter email: ");
         newContact.Email = Console.ReadLine();
 
+        //Validate the contact details
+        if (string.IsNullOrEmpty(newContact.Nome) || string.IsNullOrEmpty(newContact.Telefone) || string.IsNullOrEmpty(newContact.Email))
+        {
+            Console.WriteLine("All fields are required. Contact creation failed.");
+            return;
+        }
+
         // Add the new contact to the list and save it
         AddContact(newContact);
         Console.WriteLine("Contact created successfully!");
@@ -81,13 +88,21 @@ public class ContactManager
         Console.WriteLine("Contacts:");
         foreach (var contact in Contacts)
         {
-            Console.WriteLine($"Name: {contact.Nome}, Phone: {contact.Telefone}, Email: {contact.Email}");
+            Console.WriteLine($"ID: {contact.Id} \nName: {contact.Nome}, Phone: {contact.Telefone}, Email: {contact.Email}");
         }
     }
 
     // Empty the contacts list
     public void ClearContacts()
     {
+        // Confirm with the user before clearing
+        Console.Write("Are you sure you want to clear all contacts? (y/n): ");
+        string? confirmation = Console.ReadLine();
+        if (confirmation?.ToLower() != "y")
+        {
+            Console.WriteLine("Operation cancelled.");
+            return;
+        }
         Contacts.Clear();
         SaveContacts();
         Console.WriteLine("All contacts have been cleared.");
@@ -106,7 +121,7 @@ public class ContactManager
 
         // Prompt the user for the name of the contact to edit
         Console.Write("Enter the name of the contact to edit: ");
-        Contact? contact = FindContactByName(Console.ReadLine() ?? string.Empty);
+        Contact? contact = FindContactByName(Contacts);
         if (contact == null)
         {
             Console.WriteLine("Contact not found.");
@@ -139,26 +154,44 @@ public class ContactManager
     }
 
     // Find a contact by name
-    public Contact? FindContactByName(string name)
+    public Contact? FindContactByName(List<Contact> Contacts)
     {
-        return Contacts.Find(c => c.Nome?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+        // Prompt the user for the name of the contact to find
+        Console.WriteLine("\nContact: ");
+        string? name = Console.ReadLine();
+
+        // Find a list of contacts by name, ignoring case
+        // Using While loop to handle multiple matches
+        while (true)
+        {
+            Contact? contact = Contacts.Find(c => c.Nome?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+            if (contact != null)
+            {
+                return contact;
+            }
+            else
+            {
+                Console.WriteLine("Contact not found. Please try again.");
+                ListContacts();
+                name = Console.ReadLine();
+            }
+        }
     }
 
     //Delete a contact by name
     public void DeleteContact()
     {
         Console.Write("Enter the name of the contact to delete: ");
-        string? name = Console.ReadLine();
-        Contact? contact = FindContactByName(name);
+        Contact? contact = FindContactByName(Contacts);
         if (contact != null)
         {
             Contacts.Remove(contact);
             SaveContacts();
-            Console.WriteLine($"Contact '{name}' deleted successfully.");
+            Console.WriteLine($"Contact deleted successfully.");
         }
         else
         {
-            Console.WriteLine($"Contact '{name}' not found.");
+            Console.WriteLine($"Contact not found.");
         }
     }
 }
