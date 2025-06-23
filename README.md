@@ -2,7 +2,7 @@
 # Console Contact Manager
 
 A simple console application written in C# to manage contacts.  
-This project now implements a complete basic **CRUD** (Create, Read, Update, Delete) system for contact management, with data saved in a JSON file.
+This project implements a complete basic **CRUD** (Create, Read, Update, Delete) system for contact management, with data saved in a JSON file.
 
 ## Features ✅
 
@@ -38,9 +38,6 @@ This project now implements a complete basic **CRUD** (Create, Read, Update, Del
 
 ## Possible Next Steps 🚧
 
-- Improve user input validation
-- Add contact search functionality
-- Implement unique contact IDs
 - Create unit tests
 - Migrate to a graphical interface (WinForms/WPF)
 - Persist data in a database (e.g., SQLite)
@@ -48,8 +45,4 @@ This project now implements a complete basic **CRUD** (Create, Read, Update, Del
 ## Contributing 🤝
 
 Feel free to submit issues or pull requests to help improve this project.
-
-## License 📄
-
-This project is licensed under the MIT License.
 
