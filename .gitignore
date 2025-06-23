@@ -18,6 +18,7 @@ mono_crash.*
 
 # Local files
 contacts.json
+contacts.csv
 
 # Build results
 [Dd]ebug/

@@ -236,4 +236,34 @@ public class ContactManager
             Console.WriteLine($"Contact not found.");
         }
     }
+
+    // Export contacts to a csv file
+    public void ExportContactsToCsv()
+    {
+
+        string nameArchiveCsv = "contacts.csv";
+        // Define the path to the CSV file
+        string projectRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..");
+        string filePath = Path.Combine(projectRoot, nameArchiveCsv);
+
+        //Try/Catch to save archive
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine("Id,Name,Phone,Email");
+                foreach (var contact in Contacts)
+                {
+                    writer.WriteLine($"{contact.Id},{contact.Name},{contact.Phone},{contact.Email}");
+                }
+            }
+            Console.Clear();
+            Console.WriteLine($"Contacts exported to {nameArchiveCsv} successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.Clear();
+            Console.WriteLine($"An error occurred while exporting contacts: {ex.Message}");
+        }
+    }
 }
