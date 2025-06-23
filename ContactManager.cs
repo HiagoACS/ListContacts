@@ -92,4 +92,73 @@ public class ContactManager
         SaveContacts();
         Console.WriteLine("All contacts have been cleared.");
     }
+
+    // Edit a contact
+    public void EditContact()
+    {
+
+        // Check if there are any contacts to edit
+        if (Contacts.Count == 0)
+        {
+            Console.WriteLine("No contacts available to edit.");
+            return;
+        }
+
+        // Prompt the user for the name of the contact to edit
+        Console.Write("Enter the name of the contact to edit: ");
+        Contact? contact = FindContactByName(Console.ReadLine() ?? string.Empty);
+        if (contact == null)
+        {
+            Console.WriteLine("Contact not found.");
+            return;
+        }
+
+        // Display the current details of the contact and prompt for new values
+        Console.WriteLine($"Editing contact: {contact.Nome}");
+
+        Console.Write("Enter new name (leave empty to keep current): ");
+        string? newName = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newName))
+        {
+            contact.Nome = newName;
+        }
+        Console.Write("Enter new phone (leave empty to keep current): ");
+        string? newPhone = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newPhone))
+        {
+            contact.Telefone = newPhone;
+        }
+        Console.Write("Enter new email (leave empty to keep current): ");
+        string? newEmail = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newEmail))
+        {
+            contact.Email = newEmail;
+        }
+        // Save the updated contacts list to the file
+        SaveContacts();
+    }
+
+    // Find a contact by name
+    public Contact? FindContactByName(string name)
+    {
+        return Contacts.Find(c => c.Nome?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    //Delete a contact by name
+    public void DeleteContact()
+    {
+        Console.Write("Enter the name of the contact to delete: ");
+        string? name = Console.ReadLine();
+        Contact? contact = FindContactByName(name);
+        if (contact != null)
+        {
+            Contacts.Remove(contact);
+            SaveContacts();
+            Console.WriteLine($"Contact '{name}' deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine($"Contact '{name}' not found.");
+        }
+    }
 }

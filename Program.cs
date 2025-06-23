@@ -10,7 +10,9 @@ public class Program
             Console.WriteLine("1. Create Contact");
             Console.WriteLine("2. View Contacts");
             Console.WriteLine("3. Empty Contacts");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Edit Contacts");
+            Console.WriteLine("5. Delete Contact");
+            Console.WriteLine("6. Exit");
             Console.Write("Choose an option: ");
             string? choice = Console.ReadLine();
             switch (choice)
@@ -25,6 +27,12 @@ public class Program
                     contactManager.ClearContacts();
                     break;
                 case "4":
+                    contactManager.EditContact();
+                    break;
+                case "5":
+                    contactManager.DeleteContact();
+                    break;
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option, please try again.");
