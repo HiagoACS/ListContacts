@@ -187,4 +187,47 @@ public class ContactRepository
             return Convert.ToInt32(command.ExecuteScalar()) > 0;
         }
     }
+
+    public void ExportContactsToCsv(string filePath) // Export all contacts to a CSV file
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Name, Phone, Email FROM Contacts";
+            using (var reader = command.ExecuteReader())
+            {
+                using (var writer = new System.IO.StreamWriter(filePath))
+                {
+                    writer.WriteLine("Name,Phone,Email"); // Write CSV header
+                    while (reader.Read())
+                    {
+                        writer.WriteLine($"{reader.GetString(0)},{reader.GetString(1)}, {reader.GetString(2)}");
+                    }
+                }
+            }
+        }
+    }
+
+    public void ImportContactsFromCsv(string filePath) // Import contacts from a CSV file
+    {
+        using (var reader = new System.IO.StreamReader(filePath))
+        {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                var parts = line.Split(',');
+                if (parts.Length == 3)
+                {
+                    var contact = new Contact
+                    {
+                        Name = parts[0],
+                        Phone = parts[1],
+                        Email = parts[2]
+                    };
+                    AddContact(contact); // Add the contact to the database
+                }
+            }
+        }
+    }
 }

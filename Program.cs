@@ -13,7 +13,9 @@ public class Program
             Console.WriteLine("3. Empty Contacts");
             Console.WriteLine("4. Edit Contacts");
             Console.WriteLine("5. Delete Contact");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("6. Export Contacts to CSV");
+            Console.WriteLine("7. Import Contacts from CSV");
+            Console.WriteLine("8. Exit");
             Console.Write("Choose an option: ");
             string? choice = Console.ReadLine();
             switch (choice)
@@ -35,7 +37,16 @@ public class Program
                     contactManager.DeleteContact();
                     break;
                 case "6":
-                    return;
+                    contactManager.ExportContactsToCsv();
+                    break;
+                case "7":
+                    contactManager.ImportContactsFromCsv();
+                    break;
+                case "8":
+                    Console.Clear();
+                    Console.WriteLine("Exiting the application. Goodbye!");
+                    Console.ReadKey();
+                    return; // Exit the application
                 default:
                     Console.Clear();
                     Console.WriteLine("Invalid option, please try again.");

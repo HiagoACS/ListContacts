@@ -168,7 +168,6 @@ public class ContactManager
             Console.WriteLine($"Contact not found.");
         }
     }
-    /*
     // Export contacts to a csv file
     public void ExportContactsToCsv()
     {
@@ -181,17 +180,10 @@ public class ContactManager
         //Try/Catch to save archive
         try
         {
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                writer.WriteLine("Id,Name,Phone,Email");
-                foreach (var contact in Contacts)
-                {
-                    writer.WriteLine($"{contact.Id},{contact.Name},{contact.Phone},{contact.Email}");
-                }
-            }
+            contactRepository.ExportContactsToCsv(filePath); // Export contacts to CSV file
             Console.Clear();
             Console.WriteLine($"Contacts exported to {nameArchiveCsv} successfully.");
-            logger.WriteLog($"Contacts exported to {nameArchiveCsv} successfully.");
+            logger.WriteLog($"Contacts exported to {nameArchiveCsv}.");
         }
         catch (Exception ex)
         {
@@ -221,26 +213,13 @@ public class ContactManager
             logger.WriteLog($"Importing contacts from {nameArchiveCsv}");
             if (File.Exists(filePath))
             {
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("Id,Name,Phone,Email")) continue; // Skip header line
-                        var parts = line.Split(',');
-                        if (parts.Length == 4)
-                        {
-                            // Create a new contact with the data from the CSV file, parts[0] is Id, parts[1] is Name, parts[2] is Phone, parts[3] is Email
-                            CreateContact(parts[1], parts[2], parts[3]); // CreateContact method expects Name, Phone, Email
-                        }
-                    }
-                }
+                contactRepository.ImportContactsFromCsv(filePath); // Import contacts from CSV file
                 Console.WriteLine($"Contacts imported from {nameArchiveCsv} successfully.");
+                logger.WriteLog($"Contacts imported from {nameArchiveCsv}.");
             }
             else
             {
                 Console.WriteLine($"The file {nameArchiveCsv} does not exist.");
-                logger.WriteLog($"The file {nameArchiveCsv} does not exist.");
             }
         }
         catch (Exception ex)
@@ -249,5 +228,4 @@ public class ContactManager
             logger.WriteLog($"An error occurred while importing contacts from {nameArchiveCsv}: {ex.Message}");
         }
     }
-    */
 }

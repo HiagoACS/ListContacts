@@ -10,7 +10,8 @@ This project allows users to create, view, update, and delete contacts directly 
 
 ✅ Create new contacts  
 ✅ List all contacts  
-✅ Edit an existing contact  
+✅ Edit an existing contact
+✅ CSV Export and Import
 ✅ Delete a contact  
 ✅ Prevent duplicate contacts (by phone number or email)  
 ✅ Confirm deletion before clear the database  
@@ -29,10 +30,7 @@ This project allows users to create, view, update, and delete contacts directly 
 
 ## 🚫 Temporarily Removed Features
 
-- Search for a contact by name or ID  
-- CSV Export  
-- CSV Import  
-
+- Search for a contact by name or ID 
 (These will be re-implemented later, adapted to work directly with the SQLite database.)
 
 ---
@@ -48,7 +46,6 @@ This project allows users to create, view, update, and delete contacts directly 
 
 ## 📝 Future Improvements
 
-- Re-implement CSV Import/Export based on database data  
 - Implement unit tests  
 - Implement pagination or filtering for large datasets  
 - Improve error handling  
