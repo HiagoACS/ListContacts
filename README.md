@@ -1,49 +1,68 @@
-﻿
-# Console Contact Manager
+﻿# Console Contact Manager
 
-A simple console application written in C# to manage contacts.  
-This project implements a complete basic **CRUD** (Create, Read, Update, Delete) system for contact management, with data saved in a JSON file.
+A simple console-based Contact Manager written in C#.
 
-## Features ✅
+This project allows users to create, view, update, and delete contacts directly from the console, using **SQLite** as the data storage backend.
 
-- **Create**: Add new contacts
-- **Read**: List all saved contacts
-- **Update**: Edit existing contacts by name
-- **Delete**: Remove specific contacts by name or clear the entire contact list
-- Persist contact data in a local JSON file (`contacts.json`)
-- Register Logger to track application events
+---
 
-## Getting Started 🚀
+## 📌 Features
 
-### Prerequisites
+✅ Create new contacts  
+✅ List all contacts  
+✅ Edit an existing contact  
+✅ Delete a contact  
+✅ Confirm deletion before clear the database  
+✅ Automatically saves contacts in an SQLite database  
+✅ Basic input validation  
+✅ Logs important actions (e.g., contact creation, deletion) to a text file
 
-- [.NET SDK](https://dotnet.microsoft.com/download) installed
-- Visual Studio (recommended) or any other C# IDE
+---
 
-### Running the Application
+## ✅ Current Data Storage
 
-1. Clone the repository:
+- All contacts are now stored in a local SQLite database (`contacts.db`), created automatically at runtime.
+- The application uses the `Microsoft.Data.Sqlite` package for database operations.
 
-   ```bash
-   git clone https://github.com/HiagoACS/ListContacts.git
-   ```
+---
 
-2. Open the solution in Visual Studio.
+## 🚫 Temporarily Removed Features
 
-3. Build and run the project.
+- Search for a contact by name or ID  
+- Prevent duplicate contacts (by phone number)  
+- CSV Export  
+- CSV Import  
 
-### Notes
+(These will be re-implemented later, adapted to work directly with the SQLite database.)
 
-- All contacts are saved locally in a JSON file (`contacts.json`).
-- The `contacts.json` file is ignored in version control (`.gitignore`) to prevent personal data from being pushed to the repository.
+---
 
-## Possible Next Steps 🚧
+## 🛠️ How to Run
 
-- Create unit tests
-- Migrate to a graphical interface (WinForms/WPF)
-- Persist data in a database (e.g., SQLite)
+1. Clone the repository
+2. Open the solution in Visual Studio
+3. Make sure the `Microsoft.Data.Sqlite` NuGet package is installed
+4. Build and run the application
 
-## Contributing 🤝
+---
 
-Feel free to submit issues or pull requests to help improve this project.
+## 📝 Future Improvements
+
+- Re-implement CSV Import/Export based on database data  
+- Implement unit tests  
+- Implement pagination or filtering for large datasets  
+- Improve error handling  
+- Add DateCreated field for each contact  
+
+---
+
+## 📅 Project Status
+
+The project is in an educational / learning phase, focusing on clean code structure, basic CRUD operations, and working with a database.
+
+---
+
+## 📣 Contributions
+
+This project is for learning purposes only. Feel free to fork or suggest improvements.
 

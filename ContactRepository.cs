@@ -1,0 +1,151 @@
+﻿using Microsoft.Data.Sqlite;
+using System.Collections.Generic;
+using System;
+
+public class ContactRepository
+{
+	private readonly string connectionString;
+
+    public ContactRepository()
+    {
+        string projectRoot = AppDomain.CurrentDomain.BaseDirectory; // Get the base directory of the application
+        connectionString = $"Data Source={System.IO.Path.Combine(projectRoot, "contacts.db")}";
+
+        CreateDatabase();
+    }
+
+    private void CreateDatabase() // Create the database and the Contacts table if they do not exist
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open(); // Open the connection to the SQLite database
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                CREATE TABLE IF NOT EXISTS Contacts (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Phone TEXT NOT NULL,
+                    Email TEXT NOT NULL
+                )";
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public void AddContact(Contact contact) // Add a new contact to the database
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                INSERT INTO Contacts (Name, Phone, Email)
+                VALUES ($name, $phone, $email)";
+            command.Parameters.AddWithValue("$name", contact.Name);
+            command.Parameters.AddWithValue("$phone", contact.Phone);
+            command.Parameters.AddWithValue("$email", contact.Email);
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public List<Contact> GetAllContacts() // Retrieve all contacts from the database
+    {
+        var contacts = new List<Contact>();
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Id, Name, Phone, Email FROM Contacts";
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    contacts.Add(new Contact
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Phone = reader.GetString(2),
+                        Email = reader.GetString(3)
+                    });
+                }
+            }
+        }
+        return contacts;
+    }
+    public Contact GetContactById(int id) // Retrieve a contact by its ID
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Id, Name, Phone, Email FROM Contacts WHERE Id = $id";
+            command.Parameters.AddWithValue("$id", id);
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    return new Contact
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Phone = reader.GetString(2),
+                        Email = reader.GetString(3)
+                    };
+                }
+            }
+        }
+        return null; // Return null if no contact is found
+    }
+
+    public void UpdateContact(Contact contact) // Update an existing contact
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                UPDATE Contacts
+                SET Name = $name, Phone = $phone, Email = $email
+                WHERE Id = $id";
+            command.Parameters.AddWithValue("$id", contact.Id);
+            command.Parameters.AddWithValue("$name", contact.Name);
+            command.Parameters.AddWithValue("$phone", contact.Phone);
+            command.Parameters.AddWithValue("$email", contact.Email);
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public void DeleteContact(int id) // Delete a contact by its ID
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM Contacts WHERE Id = $id";
+            command.Parameters.AddWithValue("$id", id);
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public void DeleteAllContacts() // Delete all contacts from the database
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM Contacts";
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public bool HasContacts() // Check if there are any contacts in the database
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(*) FROM Contacts";
+            return Convert.ToInt32(command.ExecuteScalar()) > 0;
+        }
+    }
+}

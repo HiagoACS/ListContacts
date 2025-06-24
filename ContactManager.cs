@@ -5,30 +5,16 @@ using System.Text.Json;
 
 public class ContactManager
 {
-    private List<Contact> Contacts { get; set; }
-    private string filePath = "contacts.json";
     private readonly Logger logger;
+    private readonly ContactRepository contactRepository;
     //Constructor
     public ContactManager(Logger logger)
     {
         this.logger = logger;
         // Initialize the contacts list and load existing contacts from a file
-        Contacts = new List<Contact>();
-        getContactArchive();
-    }
 
-    // Properties
-    public void AddContact(Contact contact)
-    {
-        Contacts.Add(contact);
-    }
-    public void RemoveContact(Contact contact)
-    {
-        Contacts.Remove(contact);
-    }
-    public List<Contact> GetContacts()
-    {
-        return Contacts;
+        contactRepository = new ContactRepository(); // Initialize the contact repository
+
     }
 
     // Create a new contact
@@ -52,76 +38,17 @@ public class ContactManager
             Console.WriteLine("All fields are required. Contact creation failed.");
             return;
         }
-        // Check if a contact with the same phone already exists
-        if (Contacts.Exists(c => c.Phone == newContact.Phone))
-        {
-            Console.WriteLine("A contact with this phone number already exists. Contact creation failed.");
-            return;
-        }
-
 
         // Add the new contact to the list and save it
-        AddContact(newContact);
+        contactRepository.AddContact(newContact); // Save the contact to the database
         logger.WriteLog($"Contact created: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
         Console.WriteLine("Contact created successfully!");
 
-        // Save the updated contacts list to the file
-        SaveContacts();
     }
 
-    public void CreateContact(string name, string phone, string email)
-    {
-        Contact newContact = new Contact();
-
-        newContact.Name = name;
-        newContact.Phone = phone;
-        newContact.Email = email;
-
-        //Validate the contact details
-        if (string.IsNullOrEmpty(newContact.Name) || string.IsNullOrEmpty(newContact.Phone) || string.IsNullOrEmpty(newContact.Email))
-        {
-            Console.WriteLine("Contact don't have all fields. Contact creation failed.");
-            return;
-        }
-        // Check if a contact with the same phone already exists
-        if (Contacts.Exists(c => c.Phone == newContact.Phone))
-        {
-            Console.WriteLine("A contact with this phone number already exists. Contact creation failed.");
-            return;
-        }
-
-
-        // Add the new contact to the list and save it
-        AddContact(newContact);
-        Console.WriteLine($"Contact {newContact.Name} added!");
-
-        // Save the updated contacts list to the file
-        SaveContacts();
-        logger.WriteLog($"Contact imported: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
-    }
-    // Save contacts to a JSON file
-    private void SaveContacts()
-    {
-        // Order contacts by name before saving
-        Contacts = Contacts.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase).ToList();
-        string json = JsonSerializer.Serialize(Contacts);
-        File.WriteAllText(filePath, json);
-    }
-
-
-    // Load contacts from a JSON file
-    private void getContactArchive()
-    {
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText("contacts.json");
-            Contacts = JsonSerializer.Deserialize<List<Contact>>(json) ?? new List<Contact>();
-        }
-    }
-
-    // List all contacts
     public void ListContacts()
     {
+        List<Contact> Contacts = contactRepository.GetAllContacts(); // Get all contacts from the database
         if (Contacts.Count == 0)
         {
             Console.Clear();
@@ -147,8 +74,8 @@ public class ContactManager
             Console.WriteLine("Operation cancelled.");
             return;
         }
-        Contacts.Clear();
-        SaveContacts();
+
+        contactRepository.DeleteAllContacts(); // Delete contacts from the database
 
         Console.WriteLine("All contacts have been cleared.");
         logger.WriteLog("All contacts cleared.");
@@ -160,15 +87,16 @@ public class ContactManager
         Console.Clear();
         ListContacts();
         // Check if there are any contacts to edit
-        if (Contacts.Count == 0)
+        if (contactRepository.HasContacts() != true)
         {
             Console.WriteLine("No contacts available to edit.");
             return;
         }
 
         // Prompt the user for the name of the contact to edit
-        Console.Write("Enter the name of the contact to edit: ");
-        Contact? contact = FindContact(Contacts);
+        Console.Write("Enter the Id of the contact to edit: ");
+        int id = Convert.ToInt32(Console.ReadLine());
+        Contact? contact = contactRepository.GetContactById(id);
         if (contact == null)
         {
             Console.WriteLine("Contact not found.");
@@ -200,79 +128,24 @@ public class ContactManager
         }
         // Save the updated contacts list to the file
         Console.Clear();
-        SaveContacts();
+        contactRepository.UpdateContact(contact); // Update the contact in the database
 
         logger.WriteLog($"Contact edited: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
 
     }
 
-    // Find a contact by name
-    private Contact? FindContact(List<Contact> Contacts)
-    {
-        Console.Clear();
-        Console.WriteLine("Search contact with Id or Name:");
-        Console.WriteLine("1. Search by Name");
-        Console.WriteLine("2. Search by Id");
-        Console.Write("Choose an option (1 or 2): ");
-        string? option = Console.ReadLine();
-        Contact? contact = null;
-        // Find a list of contacts by name, ignoring case
-        // Using While loop to handle multiple matches
-        while (true)
-        {
-            // Get the name or ID to search for
-            if (option == "1") 
-            { 
-                Console.Write("Enter the name of the contact: ");
-                string name = Console.ReadLine();
-                contact = Contacts.Find(c => c.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
-                logger.WriteLog($"Searching contact by Name: {name}");
-            }
-            else if (option == "2") 
-            {
-                Console.Write("Enter the ID of the contact: ");
-                string id = Console.ReadLine();
-                contact = Contacts.Find(c => c.Id.ToString().Equals(id, StringComparison.OrdinalIgnoreCase) == true);
-                logger.WriteLog($"Searching contact by Id: {id}");
-            }
-
-
-            // If a contact is found, return it
-            if (contact != null)
-            {
-                logger.WriteLog($"Contact: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
-                return contact;
-            }
-
-            // If no contact is found, prompt the user to try again
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("Contact not found. Please try again.");
-
-                logger.WriteLog("Contact not found during search.");
-
-                ListContacts();
-                Console.WriteLine("1. Search by Name");
-                Console.WriteLine("2. Search by Id");
-                option = Console.ReadLine();
-            }
-        }
-    }
-
-    // Find a contact by ID
-
-
     //Delete a contact by name
     public void DeleteContact()
     {
         Console.Clear();
-        Console.Write("Enter the name of the contact to delete: ");
-        Contact? contact = FindContact(Contacts);
+        ListContacts();
+        Console.Write("Enter the Id of the contact to delete: ");
+        int id = Convert.ToInt32(Console.ReadLine());
+        Contact? contact = contactRepository.GetContactById(id);
+        Console.Clear();
         if (contact != null)
         {
-            Contacts.Remove(contact);
-            SaveContacts();
+            contactRepository.DeleteContact(id);
             logger.WriteLog($"Contact deleted: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
             Console.WriteLine($"Contact deleted successfully.");
         }
@@ -281,7 +154,7 @@ public class ContactManager
             Console.WriteLine($"Contact not found.");
         }
     }
-
+    /*
     // Export contacts to a csv file
     public void ExportContactsToCsv()
     {
@@ -362,4 +235,5 @@ public class ContactManager
             logger.WriteLog($"An error occurred while importing contacts from {nameArchiveCsv}: {ex.Message}");
         }
     }
+    */
 }
