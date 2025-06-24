@@ -10,8 +10,8 @@ This project allows users to create, view, update, and delete contacts directly 
 
 ✅ Create new contacts  
 ✅ List all contacts  
-✅ Edit an existing contact
-✅ CSV Export and Import
+✅ Edit an existing contact  
+✅ CSV Export and Import  
 ✅ Delete a contact  
 ✅ Prevent duplicate contacts (by phone number or email)  
 ✅ Confirm deletion before clear the database  
