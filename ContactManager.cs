@@ -39,6 +39,13 @@ public class ContactManager
             return;
         }
 
+        // Check if the contact already exists
+        if (contactRepository.ContactExists(newContact.Phone, newContact.Email))
+        {
+            Console.WriteLine("A contact with the same phone or email already exists.");
+            return;
+        }
+
         // Add the new contact to the list and save it
         contactRepository.AddContact(newContact); // Save the contact to the database
         logger.WriteLog($"Contact created: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
@@ -97,6 +104,7 @@ public class ContactManager
         Console.Write("Enter the Id of the contact to edit: ");
         int id = Convert.ToInt32(Console.ReadLine());
         Contact? contact = contactRepository.GetContactById(id);
+        Console.Clear();
         if (contact == null)
         {
             Console.WriteLine("Contact not found.");
@@ -126,8 +134,14 @@ public class ContactManager
         {
             contact.Email = newEmail;
         }
-        // Save the updated contacts list to the file
         Console.Clear();
+        //Check if the updated contact already exists
+        if (contactRepository.ContactExistsForEdit(contact.Id, contact.Phone, contact.Email))
+        {
+            Console.WriteLine("A contact with the same phone or email already exists.");
+            return;
+        }
+        // Save the updated contacts list to the file
         contactRepository.UpdateContact(contact); // Update the contact in the database
 
         logger.WriteLog($"Contact edited: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");

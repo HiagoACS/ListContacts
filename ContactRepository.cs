@@ -24,9 +24,9 @@ public class ContactRepository
             command.CommandText = @"
                 CREATE TABLE IF NOT EXISTS Contacts (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    Phone TEXT NOT NULL,
-                    Email TEXT NOT NULL
+                    Name TEXT NOT NULL ,
+                    Phone TEXT NOT NULL UNIQUE,
+                    Email TEXT NOT NULL UNIQUE
                 )";
             command.ExecuteNonQuery();
         }
@@ -132,8 +132,14 @@ public class ContactRepository
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
+
+            // Delete all contacts
             var command = connection.CreateCommand();
             command.CommandText = "DELETE FROM Contacts";
+            command.ExecuteNonQuery();
+
+            // Reset the auto-increment ID
+            command.CommandText = "DELETE FROM sqlite_sequence WHERE name='Contacts'";
             command.ExecuteNonQuery();
         }
     }
@@ -145,6 +151,39 @@ public class ContactRepository
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "SELECT COUNT(*) FROM Contacts";
+            return Convert.ToInt32(command.ExecuteScalar()) > 0;
+        }
+    }
+
+    public bool ContactExists(string phone, string email) // Check if a contact with the same phone or email already exists
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT COUNT(*)
+                FROM Contacts
+                WHERE Phone = $phone OR Email = $email";
+            command.Parameters.AddWithValue("$phone", phone);
+            command.Parameters.AddWithValue("$email", email);
+            return Convert.ToInt32(command.ExecuteScalar()) > 0;
+        }
+    }
+
+    public bool ContactExistsForEdit(int id, string phone, string email) // Check if a contact with the same phone or email already exists, excluding the contact being edited
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT COUNT(*)
+                FROM Contacts
+                WHERE (Phone = $phone OR Email = $email) AND Id != $id";
+            command.Parameters.AddWithValue("$phone", phone);
+            command.Parameters.AddWithValue("$email", email);
+            command.Parameters.AddWithValue("$id", id);
             return Convert.ToInt32(command.ExecuteScalar()) > 0;
         }
     }
