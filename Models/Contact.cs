@@ -1,25 +1,28 @@
 ﻿using System;
 
 //Not use Services namespace here, as this is the model definition
-namespace ConsoleContactManager.Models;
-
-public class Contact
+namespace ConsoleContactManager.Models
 {
-	public int Id { get; set; }
-    public string? Name { get; set; }
-	public string? Phone { get; set; }
-	public string? Email { get; set; }
-
-	// Constructors
-
-	// Default constructor
-	public Contact() { }
-
-    // Constructor with parameters
-    public Contact(string name, string phone, string email)
+	public class Contact
 	{
-		Name = name;
-		Phone = phone;
-		Email = email;
+		public int Id { get; set; }
+		public string? Name { get; set; }
+		public string? Phone { get; set; }
+		public string? Email { get; set; }
+
+		// Constructors
+
+		// Default constructor
+		public Contact() { }
+
+		// Constructor with parameters
+		public Contact(string name, string phone, string email)
+		{
+			Name = name;
+			Phone = phone;
+			Email = email;
+		}
 	}
+
 }
+

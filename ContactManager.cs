@@ -167,7 +167,7 @@ public class ContactManager
             return;
         }
 
-        if(service.TryDeleteContact(id, out string message, out Contact? contact))
+        if(service.TryDeleteContact(id, out string message, out Contact? contact) && contact != null)
         {
             logger.WriteLog($"Contact deleted: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
         }
@@ -204,7 +204,7 @@ public class ContactManager
     {
         Console.WriteLine("Enter the name of the CSV file to import (default is contacts.csv): ");
 
-        string nameArchiveCsv = Console.ReadLine();
+        string? nameArchiveCsv = Console.ReadLine();
         if (string.IsNullOrEmpty(nameArchiveCsv))
         {
             nameArchiveCsv = "contacts.csv"; // Default file name
