@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-public class ContactRepository
+public class ContactRepository : IContactRepository // Implementation of the IContactRepository interface
 {
 	private readonly string connectionString;
 
@@ -72,6 +72,7 @@ public class ContactRepository
         }
         return contacts;
     }
+
     public Contact GetContactById(int id) // Retrieve a contact by its ID
     {
         using (var connection = new SqliteConnection(connectionString))

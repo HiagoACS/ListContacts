@@ -6,14 +6,14 @@ using System.Text.Json;
 public class ContactManager
 {
     private readonly Logger logger;
-    private readonly ContactRepository contactRepository;
+    private readonly IContactRepository iContactRepository;
     //Constructor
-    public ContactManager(Logger logger)
+    public ContactManager(Logger logger, IContactRepository iContactRepository)
     {
         this.logger = logger;
         // Initialize the contacts list and load existing contacts from a file
 
-        contactRepository = new ContactRepository(); // Initialize the contact repository
+        this.iContactRepository = iContactRepository; // Initialize the contact repository
 
     }
 
@@ -40,14 +40,14 @@ public class ContactManager
         }
 
         // Check if the contact already exists
-        if (contactRepository.ContactExists(newContact.Phone, newContact.Email))
+        if (iContactRepository.ContactExists(newContact.Phone, newContact.Email))
         {
             Console.WriteLine("A contact with the same phone or email already exists.");
             return;
         }
 
         // Add the new contact to the list and save it
-        contactRepository.AddContact(newContact); // Save the contact to the database
+        iContactRepository.AddContact(newContact); // Save the contact to the database
         logger.WriteLog($"Contact created: {newContact.Name}, Phone: {newContact.Phone}, Email: {newContact.Email}");
         Console.WriteLine("Contact created successfully!");
 
@@ -55,7 +55,7 @@ public class ContactManager
 
     public void ListContacts()
     {
-        List<Contact> Contacts = contactRepository.GetAllContacts(); // Get all contacts from the database
+        List<Contact> Contacts = iContactRepository.GetAllContacts(); // Get all contacts from the database
         if (Contacts.Count == 0)
         {
             Console.Clear();
@@ -82,7 +82,7 @@ public class ContactManager
             return;
         }
 
-        contactRepository.DeleteAllContacts(); // Delete contacts from the database
+        iContactRepository.DeleteAllContacts(); // Delete contacts from the database
 
         Console.WriteLine("All contacts have been cleared.");
         logger.WriteLog("All contacts cleared.");
@@ -94,7 +94,7 @@ public class ContactManager
         Console.Clear();
         ListContacts();
         // Check if there are any contacts to edit
-        if (contactRepository.HasContacts() != true)
+        if (iContactRepository.HasContacts() != true)
         {
             Console.WriteLine("No contacts available to edit.");
             return;
@@ -103,7 +103,7 @@ public class ContactManager
         // Prompt the user for the name of the contact to edit
         Console.Write("Enter the Id of the contact to edit: ");
         int id = Convert.ToInt32(Console.ReadLine());
-        Contact? contact = contactRepository.GetContactById(id);
+        Contact? contact = iContactRepository.GetContactById(id);
         Console.Clear();
         if (contact == null)
         {
@@ -136,13 +136,13 @@ public class ContactManager
         }
         Console.Clear();
         //Check if the updated contact already exists
-        if (contactRepository.ContactExistsForEdit(contact.Id, contact.Phone, contact.Email))
+        if (iContactRepository.ContactExistsForEdit(contact.Id, contact.Phone, contact.Email))
         {
             Console.WriteLine("A contact with the same phone or email already exists.");
             return;
         }
         // Save the updated contacts list to the file
-        contactRepository.UpdateContact(contact); // Update the contact in the database
+        iContactRepository.UpdateContact(contact); // Update the contact in the database
 
         logger.WriteLog($"Contact edited: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
 
@@ -155,11 +155,11 @@ public class ContactManager
         ListContacts();
         Console.Write("Enter the Id of the contact to delete: ");
         int id = Convert.ToInt32(Console.ReadLine());
-        Contact? contact = contactRepository.GetContactById(id);
+        Contact? contact = iContactRepository.GetContactById(id);
         Console.Clear();
         if (contact != null)
         {
-            contactRepository.DeleteContact(id);
+            iContactRepository.DeleteContact(id);
             logger.WriteLog($"Contact deleted: {contact.Name}, Phone: {contact.Phone}, Email: {contact.Email}");
             Console.WriteLine($"Contact deleted successfully.");
         }
@@ -180,7 +180,7 @@ public class ContactManager
         //Try/Catch to save archive
         try
         {
-            contactRepository.ExportContactsToCsv(filePath); // Export contacts to CSV file
+            iContactRepository.ExportContactsToCsv(filePath); // Export contacts to CSV file
             Console.Clear();
             Console.WriteLine($"Contacts exported to {nameArchiveCsv} successfully.");
             logger.WriteLog($"Contacts exported to {nameArchiveCsv}.");
@@ -213,7 +213,7 @@ public class ContactManager
             logger.WriteLog($"Importing contacts from {nameArchiveCsv}");
             if (File.Exists(filePath))
             {
-                contactRepository.ImportContactsFromCsv(filePath); // Import contacts from CSV file
+                iContactRepository.ImportContactsFromCsv(filePath); // Import contacts from CSV file
                 Console.WriteLine($"Contacts imported from {nameArchiveCsv} successfully.");
                 logger.WriteLog($"Contacts imported from {nameArchiveCsv}.");
             }

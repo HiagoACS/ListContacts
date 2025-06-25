@@ -5,7 +5,8 @@ public class Program
     public static void Main(string[] args)
     {
         Logger logger = new Logger();
-        ContactManager contactManager = new ContactManager(logger); // Pass the logger instance to the ContactManager
+        IContactRepository repository = new ContactRepository(); // Create an instance of the ContactRepository using the interface
+        ContactManager contactManager = new ContactManager(logger, repository); // Pass the logger instance to the ContactManager
         while (true)
         {
             Console.WriteLine("1. Create Contact");
