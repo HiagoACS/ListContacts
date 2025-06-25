@@ -1,5 +1,8 @@
 ﻿using System;
 
+//Not use Services namespace here, as this is the model definition
+namespace ConsoleContactManager.Models;
+
 public class Contact
 {
 	public int Id { get; set; }

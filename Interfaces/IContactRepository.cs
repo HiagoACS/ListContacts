@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//Only use Contact namespace here
+using ConsoleContactManager.Models; // Namespace for the Contact model
+
+namespace ConsoleContactManager.Interfaces;
+
 public interface IContactRepository
 {
     void AddContact(Contact contact); // Method to add a new contact

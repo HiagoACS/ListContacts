@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using System;
 
+//Not use Services namespace here, as this is the repository implementation
+
+namespace ConsoleContactManager.Repositories; // Namespace for the interface
+
+using ConsoleContactManager.Models; // Namespace for the Contact model
+using ConsoleContactManager.Interfaces; // Namespace for the IContactRepository interface
+
 public class ContactRepository : IContactRepository // Implementation of the IContactRepository interface
 {
 	private readonly string connectionString;
@@ -214,6 +221,8 @@ public class ContactRepository : IContactRepository // Implementation of the ICo
     {
         using (var reader = new System.IO.StreamReader(filePath))
         {
+            // Read the header line
+            reader.ReadLine();
             string line;
             while ((line = reader.ReadLine()) != null)
             {

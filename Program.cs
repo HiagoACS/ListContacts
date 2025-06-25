@@ -1,5 +1,8 @@
 ﻿using System;
 
+using ConsoleContactManager.Interfaces; // Namespace for the interface
+using ConsoleContactManager.Repositories; // Namespace for the ContactRepository
+
 public class Program
 {
     public static void Main(string[] args)

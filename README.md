@@ -1,8 +1,7 @@
-﻿# Console Contact Manager
+﻿# 📇 Console Contact Manager
 
-A simple console-based Contact Manager written in C#.
-
-This project allows users to create, view, update, and delete contacts directly from the console, using **SQLite** as the data storage backend.
+A simple console-based Contact Manager written in C#.  
+This project allows users to create, view, update, delete, export, and import contacts directly from the console, using **SQLite** as the data storage backend.
 
 ---
 
@@ -11,55 +10,89 @@ This project allows users to create, view, update, and delete contacts directly 
 ✅ Create new contacts  
 ✅ List all contacts  
 ✅ Edit an existing contact  
+✅ Delete a contact by ID  
+✅ Confirm before deleting all contacts  
 ✅ CSV Export and Import  
-✅ Delete a contact  
 ✅ Prevent duplicate contacts (by phone number or email)  
-✅ Confirm deletion before clear the database  
 ✅ Automatically saves contacts in an SQLite database  
-✅ Basic input validation  
-✅ Logs important actions (e.g., contact creation, deletion) to a text file
+✅ Input validation and proper error messages  
+✅ Logs important actions (creation, update, deletion, import/export, etc.) to a text file  
+✅ Separation of concerns using **Repository**, **Service**, and **Manager** layers  
+✅ Interface abstraction with `IContactRepository`
 
 ---
 
-## ✅ Current Data Storage
+## ✅ Data Storage
 
-- All contacts are now stored in a local SQLite database (`contacts.db`), created automatically at runtime.
-- The application uses the `Microsoft.Data.Sqlite` package for database operations.
+- All contacts are stored in a local SQLite database (`contacts.db`) automatically created at runtime.
+- Uses the `Microsoft.Data.Sqlite` package for database operations.
+- Contact table fields:
+  - `Id` (auto-increment)
+  - `Name`
+  - `Phone` (unique)
+  - `Email` (unique)
 
 ---
 
-## 🚫 Temporarily Removed Features
+## 📤 CSV Support
 
-- Search for a contact by name or ID 
-(These will be re-implemented later, adapted to work directly with the SQLite database.)
+- **Export:** Writes all contacts to `contacts.csv` in the root directory.
+- **Import:** Reads contacts from a CSV file and skips duplicates based on phone/email.
+
+---
+
+## 🧱 Architecture Overview
+
+Program.cs (Entry Point)  
+│  
+├── ContactManager.cs --> Handles all user interface and console logic  
+│  
+├── Services/  
+│ └── ContactService.cs --> Business logic (validations, conflict checks)  
+│  
+├── Repositories/  
+│ └── ContactRepository.cs --> SQLite operations  
+│  
+├── Interfaces/  
+│ └── IContactRepository.cs --> Defines repository contract  
+│  
+├── Models/  
+│ └── Contact.cs --> Contact entity  
+│  
+└── Logger.cs --> Logs messages to log.txt  
+
 
 ---
 
 ## 🛠️ How to Run
 
-1. Clone the repository
-2. Open the solution in Visual Studio
-3. Make sure the `Microsoft.Data.Sqlite` NuGet package is installed
-4. Build and run the application
+1. Clone the repository  
+2. Open the solution in **Visual Studio**  
+3. Ensure the NuGet package `Microsoft.Data.Sqlite` is installed  
+4. Build and run the application  
+5. Follow the menu in the console
+
+---
+
+## 🚫 Temporarily Removed Features
+
+- Search by name or ID (now partially supported by ID)
 
 ---
 
 ## 📝 Future Improvements
 
-- Implement unit tests  
-- Implement pagination or filtering for large datasets  
-- Improve error handling  
-- Add DateCreated field for each contact  
+- Unit tests  
+- UI with WinForms or WPF (optional)
 
 ---
 
 ## 📅 Project Status
 
-The project is in an educational / learning phase, focusing on clean code structure, basic CRUD operations, and working with a database.
+The project is in an **educational/learning** stage, focused on best practices in architecture, data access patterns, and clean code principles.
 
 ---
 
 ## 📣 Contributions
 
-This project is for learning purposes only. Feel free to fork or suggest improvements.
-
+This project is for learning purposes, but suggestions and pull requests are welcome!
