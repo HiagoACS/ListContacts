@@ -74,20 +74,14 @@ Program.cs (Entry Point)
 
 ---
 
-## 🚫 Temporarily Removed Features
-
-- Search by name or ID (now partially supported by ID)
-
----
-
-## 📝 Future Improvements
+## 📝 Sugestions to Future Improvements
 
 - Unit tests  
 - UI with WinForms or WPF (optional)
 
 ---
 
-## 📅 Project Status
+## 📅 Project Status - 100%
 
 The project is in an **educational/learning** stage, focused on best practices in architecture, data access patterns, and clean code principles.
 
